@@ -18,24 +18,22 @@ export default function App() {
 
   const { width, height } = useWindowDimensions();
 
-  // fallback: reaguj na zmianę rozmiarów okna (przydatne gdy listener nie działa)
+  // Orientacja: reaguj na zmianę orientacji jeśli listener nie działa
   useEffect(() => {
     setIsLandscape(width > height);
   }, [width, height]);
 
-  // --- ORIENTACJA: odblokuj na starcie i nasłuchuj eventów ---
+  // Orientacja: nasłuchuj eventów
   useEffect(() => {
     let subscription = null;
     const initOrientation = async () => {
       try {
-        // Odblokuj orientację przy starcie (usuwa ewentualne locki ustawione przez aplikację)
         await ScreenOrientation.unlockAsync();
       } catch (e) {
         console.warn("unlockAsync failed:", e);
       }
 
       try {
-        // Ustaw początkową wartość orientacji
         const current = await ScreenOrientation.getOrientationAsync();
         setIsLandscape(
           current === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
@@ -64,7 +62,6 @@ export default function App() {
       try {
         if (subscription) ScreenOrientation.removeOrientationChangeListener(subscription);
       } catch (e) {
-        // ignore
       }
     };
   }, []);
@@ -206,6 +203,7 @@ export default function App() {
     ));
 
   return (
+    // TODO: zmień SafeAreaView na coś nowszego
     <SafeAreaView style={styles.container}>
       <View style={styles.displayContainer}>
         <ScrollView horizontal contentContainerStyle={{ flexGrow: 1, justifyContent: "flex-end" }} showsHorizontalScrollIndicator={false}>
